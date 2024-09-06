@@ -2,7 +2,7 @@ import sys
 import os
 import camelot
 
-def usage(err=None) -> int:
+def usage(err: str | None =None) -> int:
     if err:
         print(f"Error: {err}")
     print(f"Usage:\n{sys.argv[0]} <input-filename.pdf> [output-filename.csv]")
@@ -17,13 +17,13 @@ def main() -> int:
     if sys.argv[1][-3:] != "pdf":
         return usage("Input file should be a pdf")
 
-    infile = sys.argv[1] 
-    outfile = sys.argv[2] if len(sys.argv) > 2 else "output.csv"
+    infile: str = sys.argv[1] 
+    outfile: str = sys.argv[2] if len(sys.argv) > 2 else "output.csv"
 
     tables = camelot.read_pdf(infile, pages="all", flavor= "stream")
     if not tables:
         raise Exception(f"Failure opening or parsing input file {infile}")
-    everything = ""
+    everything: str = ""
     for table in tables:
         everything += "\n".join(table.df.to_csv(index=False).split("\n")[2:])
     with open(outfile, "w") as out:
